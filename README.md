@@ -1,98 +1,330 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# College Course Enrollment Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+NestJS backend for a college course enrollment system. It includes admin JWT authentication, course management, student registration, enrollment rules, MySQL persistence through TypeORM, validation DTOs, and Swagger UI.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Features
 
-## Description
+- Admin login with JWT
+- Admin user management
+- Course create, list, detail, update, and delete
+- Student registration and admin-readable student management
+- Student course enrollment
+- Duplicate enrollment protection
+- Course max-capacity protection
+- Swagger UI for API testing
+- MySQL database with TypeORM
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Requirements
 
-## Project setup
+- Node.js
+- pnpm
+- MySQL running on port `3306`
+- Database named `sim`
 
-```bash
-$ pnpm install
+If you use XAMPP, start **MySQL** from the XAMPP Control Panel before running the backend.
+
+## Database Setup
+
+Create the MySQL database:
+
+```sql
+CREATE DATABASE IF NOT EXISTS sim;
 ```
 
-## Compile and run the project
+Default local database settings:
 
-```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+```text
+host: 127.0.0.1 or localhost
+port: 3306
+username: root
+password: empty by default for XAMPP
+database: sim
 ```
 
-## Run tests
+## Environment Setup
+
+Create `.env` from `.env.example`:
 
 ```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+cp .env.example .env
 ```
 
-## Deployment
+For XAMPP MySQL with empty root password, use:
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+```env
+PORT=8000
+API_PREFIX=api
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+DB_TYPE=mysql
+DATABASE_URL=mysql://root:@127.0.0.1:3306/sim
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_USERNAME=root
+DB_PASSWORD=
+DB_DATABASE=sim
+TYPEORM_SYNC=true
+
+JWT_SECRET=sim-college-enrollment-jwt-secret
+JWT_EXPIRES_IN=1d
+
+DEFAULT_ADMIN_NAME=Super Admin
+DEFAULT_ADMIN_EMAIL=admin@sim.com
+DEFAULT_ADMIN_PASSWORD=Admin@12345
+```
+
+The default admin is created automatically when the app starts if it does not already exist.
+
+## Install Dependencies
 
 ```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
+pnpm install
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## Run Backend
 
-## Resources
+Development watch mode:
 
-Check out a few resources that may come in handy when working with NestJS:
+```bash
+pnpm run start:dev
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+Production build:
 
-## Support
+```bash
+pnpm run build
+pnpm run start:prod
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+The backend runs on:
 
-## Stay in touch
+```text
+http://localhost:8000
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Swagger UI:
 
-## License
+```text
+http://localhost:8000/docs
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## First Login
+
+Use this API to get JWT token:
+
+```http
+POST http://localhost:8000/api/auth/login
+```
+
+Body:
+
+```json
+{
+  "email": "admin@sim.com",
+  "password": "Admin@12345"
+}
+```
+
+Copy `accessToken` from the response.
+
+For protected routes, add this Postman header:
+
+```text
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
+
+## API Endpoints
+
+### Auth
+
+```http
+POST /api/auth/login
+GET /api/auth/me
+```
+
+`GET /api/auth/me` requires JWT.
+
+### Admins
+
+All admin routes require JWT.
+
+```http
+POST /api/admins
+GET /api/admins
+GET /api/admins/:id
+PATCH /api/admins/:id
+```
+
+Create admin body:
+
+```json
+{
+  "name": "College Admin",
+  "email": "college-admin@example.com",
+  "password": "Admin@12345",
+  "isActive": true
+}
+```
+
+### Courses
+
+Public:
+
+```http
+GET /api/courses
+GET /api/courses/:id
+```
+
+Protected:
+
+```http
+POST /api/courses
+PATCH /api/courses/:id
+DELETE /api/courses/:id
+```
+
+Create course body:
+
+```json
+{
+  "code": "CS101",
+  "title": "Introduction to Computer Science",
+  "description": "Core programming and computing concepts.",
+  "credits": 3,
+  "maxCapacity": 30,
+  "isActive": true
+}
+```
+
+Delete course response:
+
+```json
+{
+  "message": "Course deleted successfully.",
+  "deletedCourseId": 1
+}
+```
+
+A course cannot be deleted if it already has enrollment records.
+
+### Students
+
+Public:
+
+```http
+POST /api/students
+```
+
+Protected:
+
+```http
+GET /api/students
+GET /api/students/:id
+PATCH /api/students/:id
+```
+
+Create student body:
+
+```json
+{
+  "firstName": "Rahul",
+  "lastName": "Sharma",
+  "email": "rahul.sharma@example.com",
+  "phone": "+919876543210",
+  "dateOfBirth": "2002-08-15"
+}
+```
+
+### Enrollments
+
+Public:
+
+```http
+POST /api/enrollments
+```
+
+Protected:
+
+```http
+GET /api/enrollments
+GET /api/enrollments/:id
+GET /api/enrollments/student/:studentId
+```
+
+Enroll body:
+
+```json
+{
+  "studentId": 1,
+  "courseId": 1
+}
+```
+
+Business rules:
+
+- A student cannot enroll in the same course twice.
+- A student cannot enroll if the course has reached `maxCapacity`.
+- Enrollment fails with `404` if the student or course does not exist.
+
+## Suggested Postman Flow
+
+1. Start MySQL and create database `sim`.
+2. Run `pnpm run start:dev`.
+3. Open `POST /api/auth/login` and copy the token.
+4. Create a course with `POST /api/courses`.
+5. Create a student with `POST /api/students`.
+6. Enroll the student with `POST /api/enrollments`.
+7. Call the same enrollment again to confirm duplicate enrollment returns `400`.
+8. Create a course with `maxCapacity: 1`, enroll one student, then try enrolling another student to confirm capacity validation returns `400`.
+
+## Testing
+
+Run e2e tests:
+
+```bash
+pnpm run test:e2e
+```
+
+Run lint:
+
+```bash
+pnpm run lint
+```
+
+Run build:
+
+```bash
+pnpm run build
+```
+
+## Common Errors
+
+### Database connection refused
+
+Error:
+
+```text
+ECONNREFUSED 127.0.0.1:3306
+```
+
+Fix:
+
+- Start MySQL.
+- Confirm database `sim` exists.
+- Check `.env` database host, port, username, and password.
+
+### Unauthorized
+
+Error:
+
+```text
+401 Unauthorized
+```
+
+Fix:
+
+- Login with `POST /api/auth/login`.
+- Add `Authorization: Bearer YOUR_ACCESS_TOKEN` header for protected routes.
+
+### Course delete fails
+
+If the course has enrollment records, delete returns `400`. This protects enrollment history. Delete only courses that have no enrollments.
